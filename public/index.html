@@ -229,9 +229,24 @@
             margin-bottom: 20px;
         }
 
-        #qr-code {
-            width: 200px;
-            height: 200px;
+        #qr-code-img {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .timer-badge {
+            display: inline-block;
+            background: rgba(255, 71, 71, 0.1);
+            color: #ff4747;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 71, 71, 0.2);
         }
 
         .copy-paste-group {
@@ -334,6 +349,7 @@
     </div>
 
     <div id="qr-container">
+        <div class="timer-badge">Expira em: <span id="countdown">05:00</span></div>
         <div class="qr-card">
             <img id="qr-code-img" src="" alt="QR Code Pix">
         </div>
@@ -351,6 +367,33 @@
 
 <script>
     let currentPixKey = "";
+    let countdownInterval;
+
+    function startTimer(duration) {
+        let timer = duration, minutes, seconds;
+        clearInterval(countdownInterval);
+        countdownInterval = setInterval(function () {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            document.getElementById('countdown').textContent = minutes + ":" + seconds;
+
+            if (--timer < 0) {
+                clearInterval(countdownInterval);
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'QR Code Expirado',
+                    text: 'Este QR Code expirou. Por favor, gere um novo.',
+                    background: '#1a2a4a',
+                    color: '#fff'
+                });
+                reset();
+            }
+        }, 1000);
+    }
 
     async function generatePix() {
         const name = document.getElementById('name').value;
@@ -402,6 +445,7 @@
                 
                 document.getElementById('setup-container').style.display = 'none';
                 document.getElementById('qr-container').style.display = 'block';
+                startTimer(300); // 5 minutos em segundos
             } else {
                 throw new Error('Falha ao gerar QR Code');
             }
@@ -439,6 +483,8 @@
         document.getElementById('amount').value = '';
         document.getElementById('name').value = '';
         document.getElementById('product').value = '';
+        clearInterval(countdownInterval);
+        document.getElementById('countdown').textContent = "05:00";
     }
 </script>
 
