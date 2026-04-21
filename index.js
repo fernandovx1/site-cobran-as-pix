@@ -27,7 +27,7 @@ app.use(express.static('public'));
 
 // Rota para criar pagamento Pix
 app.post('/create-payment', async (req, res) => {
-    const { amount, email, name, product } = req.body;
+    const { amount, email, name, product, cpf } = req.body;
     console.log(`[PIX] Iniciando criação de pagamento: R$ ${amount} - Cliente: ${name} (${email || 'sem email'})`);
 
     try {
@@ -36,8 +36,12 @@ app.post('/create-payment', async (req, res) => {
             description: `Produto: ${product || 'Geral'} - Cliente: ${name || 'N/A'}`,
             payment_method_id: 'pix',
             payer: {
-                email: email || 'test_user_123@testuser.com',
-                first_name: name || 'Cliente',
+                email: email || 'fernandolima350@gmail.com',
+                first_name: name || 'Fernando',
+                identification: {
+                    type: 'CPF',
+                    number: cpf ? cpf.replace(/\D/g, '') : '43741961884'
+                }
             },
             metadata: {
                 product_name: product,
@@ -46,20 +50,21 @@ app.post('/create-payment', async (req, res) => {
         };
 
         const result = await payment.create({ body });
-        console.log(`[PIX] Sucesso! Pagamento ID: ${result.id} - Status: ${result.status}`);
+        console.log(`[PIX] Sucesso! Pagamento ID: ${result.id} - Status: ${result.status} - Detalhe: ${result.status_detail || 'n/a'}`);
 
         res.json({
             id: result.id,
             qr_code: result.point_of_interaction.transaction_data.qr_code,
             qr_code_base64: result.point_of_interaction.transaction_data.qr_code_base64,
-            status: result.status
+            status: result.status,
+            status_detail: result.status_detail
         });
     } catch (error) {
         console.error('[PIX] Erro ao criar pagamento no Mercado Pago:');
         if (error.message) console.error(`Mensagem: ${error.message}`);
         if (error.cause) console.error('Causa:', JSON.stringify(error.cause, null, 2));
         
-        res.status(500).json({ error: 'Erro ao processar pagamento' });
+        res.status(500).json({ error: 'Erro ao processar pagamento', details: error.message });
     }
 });
 
