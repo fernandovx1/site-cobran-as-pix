@@ -79,6 +79,44 @@ app.get('/check-payment/:id', async (req, res) => {
     }
 });
 
+// Rota Admin para estatísticas
+app.get('/admin/stats', async (req, res) => {
+    try {
+        const result = await payment.search({
+            options: {
+                sort: 'date_created',
+                criteria: 'desc',
+                range: 'date_created',
+                begin_date: 'NOW-30DAYS',
+                end_date: 'NOW',
+                limit: 50
+            }
+        });
+
+        const payments = result.results.map(p => ({
+            id: p.id,
+            date: p.date_created,
+            amount: p.transaction_amount,
+            status: p.status,
+            name: p.metadata?.customer_name || 'N/A',
+            product: p.metadata?.product_name || 'N/A'
+        }));
+
+        const totalApproved = payments
+            .filter(p => p.status === 'approved')
+            .reduce((sum, p) => sum + p.amount, 0);
+
+        res.json({
+            total: totalApproved,
+            count: payments.filter(p => p.status === 'approved').length,
+            history: payments
+        });
+    } catch (error) {
+        console.error('[ADMIN] Erro ao buscar estatísticas:', error);
+        res.status(500).json({ error: 'Erro ao buscar dados' });
+    }
+});
+
 // Rota Webhook para notificações
 app.post('/webhook', async (req, res) => {
     const { action, data } = req.body;

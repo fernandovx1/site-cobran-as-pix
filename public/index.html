@@ -112,32 +112,7 @@
             50% { filter: drop-shadow(0 0 25px rgba(0, 71, 255, 0.6)); }
         }
 
-        /* Efeito de Brilho (Shine) no Logo */
-        .logo-wrapper::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                120deg,
-                transparent,
-                rgba(255, 255, 255, 0.4),
-                transparent
-            );
-            transition: all 0.5s;
-            z-index: 3;
-            animation: shine 4s infinite;
-            pointer-events: none;
-        }
 
-        @keyframes shine {
-            0% { left: -100%; opacity: 0; }
-            20% { left: 100%; opacity: 1; }
-            40% { left: 100%; opacity: 0; }
-            100% { left: 100%; opacity: 0; }
-        }
 
         h1 {
             font-weight: 600;
@@ -238,15 +213,24 @@
         }
 
         .timer-badge {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             background: rgba(255, 71, 71, 0.1);
             color: #ff4747;
-            padding: 5px 15px;
+            padding: 8px 20px;
             border-radius: 20px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 600;
-            margin-bottom: 15px;
+            margin-bottom: 25px;
             border: 1px solid rgba(255, 71, 71, 0.2);
+            backdrop-filter: blur(5px);
+            animation: pulse-timer 2s infinite;
+        }
+
+        @keyframes pulse-timer {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
         }
 
         .copy-paste-group {
@@ -306,7 +290,63 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Mobile Adjustments */
+        /* Admin Button */
+        .btn-admin {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.3);
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .btn-admin:hover {
+            color: var(--secondary);
+            border-color: var(--secondary);
+            background: rgba(0, 209, 255, 0.1);
+            transform: rotate(90deg);
+        }
+
+        /* Stats Table */
+        .stats-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.8rem;
+            color: #ccd6f6;
+        }
+
+        .stats-table th {
+            text-align: left;
+            padding: 10px;
+            border-bottom: 1px solid var(--glass-border);
+            color: var(--secondary);
+        }
+
+        .stats-table td {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .status-pill {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+        }
+
+        .status-approved { background: rgba(0, 255, 133, 0.1); color: #00ff85; }
+        .status-pending { background: rgba(255, 184, 0, 0.1); color: #ffb800; }
+        .status-rejected { background: rgba(255, 71, 71, 0.1); color: #ff4747; }
+
         @media (max-width: 480px) {
             .container {
                 padding: 30px 20px;
@@ -361,9 +401,13 @@
     </div>
 
     <div id="qr-container">
-        <div class="timer-badge">Expira em: <span id="countdown">05:00</span></div>
-        <div class="qr-card">
-            <img id="qr-code-img" src="" alt="QR Code Pix">
+        <div style="display: flex; flex-direction: column; align-items: center;">
+            <div class="timer-badge">
+                <span style="font-size: 1.2rem;">⏱️</span> Expira em: <span id="countdown">05:00</span>
+            </div>
+            <div class="qr-card">
+                <img id="qr-code-img" src="" alt="QR Code Pix">
+            </div>
         </div>
         
         <p style="margin-bottom: 10px;">Ou copie o código abaixo:</p>
@@ -375,6 +419,10 @@
 
         <button class="btn-generate" style="background: transparent; border: 1px solid var(--primary); margin-top: 20px;" onclick="reset()">Voltar</button>
     </div>
+</div>
+
+<div class="btn-admin" onclick="showAdminDashboard()" title="Painel Admin">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
 </div>
 
 <script>
@@ -520,6 +568,73 @@
                 color: '#fff'
             });
         });
+    }
+
+    async function showAdminDashboard() {
+        Swal.fire({
+            title: 'Carregando Painel...',
+            background: '#1a2a4a',
+            color: '#fff',
+            didOpen: () => { Swal.showLoading(); }
+        });
+
+        try {
+            const response = await fetch('/admin/stats');
+            const data = await response.json();
+
+            let historyHtml = `
+                <div style="text-align: left; margin-bottom: 20px;">
+                    <p style="margin: 0; color: #8892b0;">Total Aprovado (30 dias)</p>
+                    <h2 style="color: #00ff85; font-size: 2rem; margin: 5px 0;">R$ ${data.total.toFixed(2)}</h2>
+                    <p style="margin: 0; font-size: 0.8rem;">${data.count} pagamentos realizados</p>
+                </div>
+                <div style="max-height: 300px; overflow-y: auto; border-radius: 12px; background: rgba(0,0,0,0.2);">
+                    <table class="stats-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Cliente</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.history.map(p => `
+                                <tr>
+                                    <td>${new Date(p.date).toLocaleDateString('pt-BR')}</td>
+                                    <td>${p.name.split(' ')[0]}</td>
+                                    <td>R$ ${p.amount.toFixed(2)}</td>
+                                    <td><span class="status-pill status-${p.status}">${p.status}</span></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            Swal.fire({
+                title: 'Painel de Controle',
+                html: historyHtml,
+                width: '600px',
+                background: '#0A0E17',
+                color: '#fff',
+                showConfirmButton: true,
+                confirmButtonText: 'Fechar',
+                confirmButtonColor: '#0047FF',
+                customClass: {
+                    popup: 'glass-popup'
+                }
+            });
+
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: 'Não foi possível carregar as estatísticas.',
+                background: '#1a2a4a',
+                color: '#fff'
+            });
+        }
     }
 
     function reset() {
