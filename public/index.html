@@ -101,8 +101,8 @@
             animation: float 4s ease-in-out infinite, pulse-glow 3s ease-in-out infinite;
         }
 
-        /* Borboletas Flutuantes Adicionais */
-        .butterfly-extra {
+        /* Borboletas e Girassóis Flutuantes Adicionais */
+        .butterfly-extra, .sunflower-extra {
             position: absolute;
             font-size: 20px;
             z-index: 3;
@@ -112,6 +112,10 @@
         .b1 { top: -10px; left: -10px; animation: fly1 5s linear infinite; }
         .b2 { top: 20px; right: -10px; animation: fly2 6s linear infinite; }
         .b3 { bottom: -10px; left: 40%; animation: fly3 7s linear infinite; }
+
+        .s1 { top: 10px; left: -20px; animation: fly2 7s linear infinite; animation-delay: 1s; }
+        .s2 { top: -20px; right: 20px; animation: fly1 6s linear infinite; animation-delay: 2s; }
+        .s3 { bottom: 10px; right: -20px; animation: fly3 8s linear infinite; animation-delay: 0.5s; }
 
         @keyframes fly1 {
             0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
@@ -533,6 +537,9 @@
         <span class="butterfly-extra b1">🦋</span>
         <span class="butterfly-extra b2">🦋</span>
         <span class="butterfly-extra b3">🦋</span>
+        <span class="sunflower-extra s1">🌻</span>
+        <span class="sunflower-extra s2">🌻</span>
+        <span class="sunflower-extra s3">🌻</span>
         <img src="logo.png?v=2" alt="Logo Luana Menato" class="logo">
     </div>
 
