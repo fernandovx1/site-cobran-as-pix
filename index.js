@@ -68,6 +68,17 @@ app.post('/create-payment', async (req, res) => {
     }
 });
 
+// Rota para consultar status do pagamento (Polling)
+app.get('/check-payment/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const paymentInfo = await payment.get({ id });
+        res.json({ status: paymentInfo.status });
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao consultar pagamento' });
+    }
+});
+
 // Rota Webhook para notificações
 app.post('/webhook', async (req, res) => {
     const { action, data } = req.body;

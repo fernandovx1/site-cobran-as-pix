@@ -380,6 +380,7 @@
 <script>
     let currentPixKey = "";
     let countdownInterval;
+    let statusInterval;
 
     function startTimer(duration) {
         let timer = duration, minutes, seconds;
@@ -460,6 +461,7 @@
                 document.getElementById('setup-container').style.display = 'none';
                 document.getElementById('qr-container').style.display = 'block';
                 startTimer(300); // 5 minutos em segundos
+                startPolling(data.id);
             } else if (data.status === 'rejected') {
                 throw new Error(`Pagamento Rejeitado: ${data.status_detail || 'Verifique os dados e tente novamente.'}`);
             } else {
@@ -477,6 +479,33 @@
             document.getElementById('loader').style.display = 'none';
             document.querySelector('.btn-generate').style.display = 'block';
         }
+    }
+
+    function startPolling(paymentId) {
+        clearInterval(statusInterval);
+        statusInterval = setInterval(async () => {
+            try {
+                const response = await fetch(`/check-payment/${paymentId}`);
+                const data = await response.json();
+
+                if (data.status === 'approved') {
+                    clearInterval(statusInterval);
+                    clearInterval(countdownInterval);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Pagamento Confirmado!',
+                        text: 'Obrigado! Seu pagamento foi recebido com sucesso.',
+                        background: '#1a2a4a',
+                        color: '#fff',
+                        confirmButtonColor: '#0047FF'
+                    }).then(() => {
+                        reset();
+                    });
+                }
+            } catch (error) {
+                console.error("Erro ao consultar status:", error);
+            }
+        }, 5000); // Verifica a cada 5 segundos
     }
 
     function copyKey() {
@@ -502,6 +531,7 @@
         document.getElementById('cpf').value = '';
         document.getElementById('email').value = '';
         clearInterval(countdownInterval);
+        clearInterval(statusInterval);
         document.getElementById('countdown').textContent = "05:00";
     }
 </script>
