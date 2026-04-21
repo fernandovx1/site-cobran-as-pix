@@ -23,27 +23,61 @@
         }
 
         body {
-            background: radial-gradient(circle at top right, #1a2a4a, #0A0E17);
+            background: #0A0E17;
             color: white;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 15px;
+            overflow-x: hidden;
+        }
+
+        /* Background Animated Blobs */
+        .bg-blobs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            background: radial-gradient(circle at 50% 50%, #1a2a4a 0%, #0A0E17 100%);
+        }
+
+        .blob {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: var(--primary);
+            filter: blur(80px);
+            border-radius: 50%;
+            opacity: 0.15;
+            animation: move 20s infinite alternate;
+        }
+
+        .blob-1 { top: -10%; left: -10%; background: var(--primary); }
+        .blob-2 { bottom: -10%; right: -10%; background: var(--secondary); animation-delay: -5s; }
+        .blob-3 { top: 40%; left: 30%; background: #4f46e5; width: 200px; height: 200px; animation-duration: 15s; }
+
+        @keyframes move {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(100px, 100px) scale(1.2); }
         }
 
         .container {
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 40px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 28px;
+            padding: 30px 24px;
             width: 100%;
-            max-width: 450px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            max-width: 420px;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
             text-align: center;
-            animation: fadeIn 0.8s ease-out;
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
         }
 
         @keyframes fadeIn {
@@ -58,7 +92,7 @@
         }
 
         .logo {
-            width: 220px;
+            width: 280px;
             height: auto;
             position: relative;
             z-index: 2;
@@ -102,6 +136,57 @@
             100% { transform: translate(0, 40px) scale(1); opacity: 0; }
         }
 
+        /* Screen-wide Floating Butterflies */
+        .butterfly-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .floating-butterfly {
+            position: absolute;
+            font-size: 24px;
+            opacity: 0;
+            filter: drop-shadow(0 0 10px rgba(0, 209, 255, 0.4));
+            animation: cruise 15s linear infinite;
+        }
+
+        @keyframes cruise {
+            0% { transform: translate(-10vw, 110vh) rotate(45deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translate(110vw, -10vh) rotate(45deg); opacity: 0; }
+        }
+
+        .fb-1 { animation-delay: 0s; animation-duration: 25s; left: 10%; }
+        .fb-2 { animation-delay: 12s; animation-duration: 30s; left: 40%; transform: scale(0.8); }
+        .fb-3 { animation-delay: 5s; animation-duration: 28s; left: 70%; transform: scale(1.2); }
+
+        /* Foreground Butterflies (Passing in front) */
+        .butterfly-fg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 200; /* Above everything */
+        }
+
+        .fb-fg-1 { animation: cruise-fg 20s linear infinite; animation-delay: 8s; left: 20%; }
+        .fb-fg-2 { animation: cruise-fg 22s linear infinite; animation-delay: 18s; left: 60%; transform: scale(0.7); }
+
+        @keyframes cruise-fg {
+            0% { transform: translate(-20vw, 120vh) rotate(30deg) scale(0.5); opacity: 0; }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.4; }
+            100% { transform: translate(120vw, -20vh) rotate(30deg) scale(1.5); opacity: 0; }
+        }
+
         @keyframes float {
             0%, 100% { transform: translateY(0) rotate(0deg); }
             50% { transform: translateY(-10px) rotate(1deg); }
@@ -116,73 +201,113 @@
 
         h1 {
             font-weight: 600;
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            background: linear-gradient(to right, #fff, #aaa);
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to bottom, #fff 0%, #aaa 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         p {
-            color: #8892b0;
-            font-size: 0.9rem;
+            color: rgba(204, 214, 246, 0.6);
+            font-size: 0.95rem;
             margin-bottom: 30px;
         }
 
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             text-align: left;
+            position: relative;
         }
 
         label {
             display: block;
             margin-bottom: 8px;
-            font-size: 0.85rem;
-            color: #ccd6f6;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(204, 214, 246, 0.5);
             margin-left: 5px;
+            font-weight: 600;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 18px;
+            color: rgba(255, 255, 255, 0.3);
+            pointer-events: none;
+            transition: color 0.3s;
         }
 
         input {
             width: 100%;
-            padding: 15px 20px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
+            padding: 16px 20px 16px 52px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
             color: white;
             font-size: 1rem;
             transition: all 0.3s;
             outline: none;
+            -webkit-appearance: none;
         }
 
         input:focus {
             border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.07);
-            box-shadow: 0 0 15px rgba(0, 71, 255, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 20px rgba(0, 71, 255, 0.15);
+        }
+
+        input:focus + .input-icon {
+            color: var(--secondary);
         }
 
         .btn-generate {
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             border: none;
-            border-radius: 12px;
+            border-radius: 16px;
             color: white;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 10px 20px -10px rgba(0, 71, 255, 0.5);
-            margin-top: 10px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0, 71, 255, 0.3);
+            margin-top: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-generate::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn-generate:hover::after {
+            left: 100%;
         }
 
         .btn-generate:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 25px -10px rgba(0, 71, 255, 0.6);
-            filter: brightness(1.1);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0, 71, 255, 0.4);
         }
 
         .btn-generate:active {
-            transform: translateY(0);
+            transform: translateY(0) scale(0.98);
         }
 
         #qr-container {
@@ -359,6 +484,23 @@
 </head>
 <body>
 
+<div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+</div>
+
+<div class="butterfly-bg">
+    <span class="floating-butterfly fb-1">🦋</span>
+    <span class="floating-butterfly fb-2">🦋</span>
+    <span class="floating-butterfly fb-3">🦋</span>
+</div>
+
+<div class="butterfly-fg">
+    <span class="floating-butterfly fb-fg-1">🦋</span>
+    <span class="floating-butterfly fb-fg-2">🦋</span>
+</div>
+
 <div class="container">
     <div class="logo-wrapper">
         <span class="butterfly-extra b1">🦋</span>
@@ -373,27 +515,34 @@
     <div id="setup-container">
         <div class="input-group">
             <label for="name">Nome do Cliente</label>
-            <input type="text" id="name" placeholder="Ex: João Silva">
+            <div class="input-wrapper">
+                <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <input type="text" id="name" placeholder="Ex: João Silva">
+            </div>
         </div>
 
         <div class="input-group">
             <label for="product">Produto / Serviço</label>
-            <input type="text" id="product" placeholder="Ex: Consultoria">
+            <div class="input-wrapper">
+                <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><path d="M3 6h18"></path><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                <input type="text" id="product" placeholder="Ex: Consultoria">
+            </div>
         </div>
 
         <div class="input-group">
             <label for="amount">Valor (R$)</label>
-            <input type="text" id="amount" placeholder="0,00" inputmode="decimal">
-        </div>
-
-        <div class="input-group">
-            <label for="cpf">CPF do Cliente (opcional)</label>
-            <input type="text" id="cpf" placeholder="000.000.000-00" maxlength="14">
+            <div class="input-wrapper">
+                <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                <input type="text" id="amount" placeholder="0,00" inputmode="decimal">
+            </div>
         </div>
 
         <div class="input-group">
             <label for="email">E-mail para comprovante (opcional)</label>
-            <input type="email" id="email" placeholder="seu@email.com">
+            <div class="input-wrapper">
+                <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+                <input type="email" id="email" placeholder="seu@email.com">
+            </div>
         </div>
 
         <button class="btn-generate" onclick="generatePix()">Gerar Pix</button>
@@ -463,8 +612,6 @@
         const amount = amountRaw.replace(',', '.');
         const email = document.getElementById('email').value;
 
-        const cpf = document.getElementById('cpf').value;
-
         if (!amount || amount <= 0) {
             Swal.fire({
                 icon: 'error',
@@ -496,7 +643,7 @@
             const response = await fetch('/create-payment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ amount, email, name, product, cpf })
+                body: JSON.stringify({ amount, email, name, product })
             });
 
             const data = await response.json();
@@ -643,7 +790,6 @@
         document.getElementById('amount').value = '';
         document.getElementById('name').value = '';
         document.getElementById('product').value = '';
-        document.getElementById('cpf').value = '';
         document.getElementById('email').value = '';
         clearInterval(countdownInterval);
         clearInterval(statusInterval);
