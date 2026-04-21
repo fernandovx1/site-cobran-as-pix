@@ -58,13 +58,11 @@
         }
 
         .logo {
-            width: 180px;
+            width: 220px;
             height: auto;
             position: relative;
             z-index: 2;
-            mix-blend-mode: screen; /* Deixa o preto transparente */
             filter: contrast(1.3) brightness(1.1) drop-shadow(0 0 15px rgba(0, 71, 255, 0.3));
-            clip-path: circle(50% at 50% 50%); /* Garante que os cantos sumam */
             animation: float 4s ease-in-out infinite, pulse-glow 3s ease-in-out infinite;
         }
 
@@ -131,6 +129,7 @@
             transition: all 0.5s;
             z-index: 3;
             animation: shine 4s infinite;
+            pointer-events: none;
         }
 
         @keyframes shine {
@@ -291,7 +290,7 @@
                 padding: 30px 20px;
             }
             .logo {
-                width: 140px;
+                width: 180px;
             }
         }
     </style>
@@ -303,7 +302,7 @@
         <span class="butterfly-extra b1">🦋</span>
         <span class="butterfly-extra b2">🦋</span>
         <span class="butterfly-extra b3">🦋</span>
-        <img src="logo.png" alt="Logo Luana Menato" class="logo">
+        <img src="logo.png?v=2" alt="Logo Luana Menato" class="logo">
     </div>
 
     <h1>Checkout Pix</h1>
@@ -322,7 +321,7 @@
 
         <div class="input-group">
             <label for="amount">Valor (R$)</label>
-            <input type="number" id="amount" placeholder="0,00" step="0.01">
+            <input type="text" id="amount" placeholder="0,00" inputmode="decimal">
         </div>
 
         <div class="input-group">
@@ -356,7 +355,8 @@
     async function generatePix() {
         const name = document.getElementById('name').value;
         const product = document.getElementById('product').value;
-        const amount = document.getElementById('amount').value;
+        const amountRaw = document.getElementById('amount').value;
+        const amount = amountRaw.replace(',', '.');
         const email = document.getElementById('email').value;
 
         if (!amount || amount <= 0) {
