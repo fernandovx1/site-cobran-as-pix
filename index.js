@@ -27,9 +27,10 @@ app.use(express.static('public'));
 
 // Rota para criar pagamento Pix
 app.post('/create-payment', async (req, res) => {
-    try {
-        const { amount, email, name, product } = req.body;
+    const { amount, email, name, product } = req.body;
+    console.log(`[PIX] Iniciando criação de pagamento: R$ ${amount} - Cliente: ${name} (${email || 'sem email'})`);
 
+    try {
         const body = {
             transaction_amount: Number(amount),
             description: `Produto: ${product || 'Geral'} - Cliente: ${name || 'N/A'}`,
@@ -45,6 +46,7 @@ app.post('/create-payment', async (req, res) => {
         };
 
         const result = await payment.create({ body });
+        console.log(`[PIX] Sucesso! Pagamento ID: ${result.id} - Status: ${result.status}`);
 
         res.json({
             id: result.id,
@@ -53,7 +55,10 @@ app.post('/create-payment', async (req, res) => {
             status: result.status
         });
     } catch (error) {
-        console.error('Erro ao criar pagamento:', error);
+        console.error('[PIX] Erro ao criar pagamento no Mercado Pago:');
+        if (error.message) console.error(`Mensagem: ${error.message}`);
+        if (error.cause) console.error('Causa:', JSON.stringify(error.cause, null, 2));
+        
         res.status(500).json({ error: 'Erro ao processar pagamento' });
     }
 });
@@ -61,12 +66,15 @@ app.post('/create-payment', async (req, res) => {
 // Rota Webhook para notificações
 app.post('/webhook', async (req, res) => {
     const { action, data } = req.body;
+    const type = req.query.type;
+    const paymentId = data?.id || req.query['data.id'];
 
-    if (action === 'payment.updated' || req.query.type === 'payment') {
-        const paymentId = data?.id || req.query['data.id'];
+    console.log(`[WEBHOOK] Notificação recebida! Ação: ${action || 'n/a'} - Tipo: ${type || 'n/a'} - ID: ${paymentId}`);
 
+    if (action === 'payment.updated' || type === 'payment') {
         try {
             const paymentInfo = await payment.get({ id: paymentId });
+            console.log(`[WEBHOOK] Status do Pagamento ${paymentId}: ${paymentInfo.status}`);
 
             if (paymentInfo.status === 'approved') {
                 const userEmail = paymentInfo.payer.email;
@@ -74,8 +82,8 @@ app.post('/webhook', async (req, res) => {
                 const name = paymentInfo.metadata?.customer_name || 'Cliente';
                 const product = paymentInfo.metadata?.product_name || 'Produto';
 
-                console.log(`Pagamento ${paymentId} aprovado! Enviando e-mail para ${userEmail}...`);
-
+                console.log(`[WEBHOOK] Pagamento APROVADO! Enviando e-mail para ${userEmail}...`);
+                
                 // Enviar e-mail de confirmação
                 const mailOptions = {
                     from: process.env.EMAIL_USER,
@@ -93,9 +101,10 @@ app.post('/webhook', async (req, res) => {
                 };
 
                 await transporter.sendMail(mailOptions);
+                console.log(`[WEBHOOK] E-mail enviado com sucesso para ${userEmail}`);
             }
         } catch (error) {
-            console.error('Erro no processamento do Webhook:', error);
+            console.error('[WEBHOOK] Erro ao processar notificação:', error.message || error);
         }
     }
 
