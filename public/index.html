@@ -250,33 +250,40 @@
         }
 
         .copy-paste-group {
-            background: rgba(0, 0, 0, 0.2);
-            padding: 10px;
-            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            border-radius: 12px;
             display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: 10px;
-            border: 1px dashed var(--glass-border);
+            border: 1px solid var(--glass-border);
+            margin-top: 10px;
         }
 
-        #pix-key {
-            font-size: 0.75rem;
+        #pix-key-text {
+            font-size: 0.7rem;
             color: #8892b0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            flex: 1;
+            word-break: break-all;
+            background: rgba(0,0,0,0.2);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: left;
+            max-height: 100px;
+            overflow-y: auto;
+            line-height: 1.4;
         }
 
         .btn-copy {
             background: var(--primary);
             border: none;
             color: white;
-            padding: 8px 15px;
+            padding: 12px;
             border-radius: 8px;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
+            font-weight: 600;
             cursor: pointer;
             transition: 0.3s;
+            width: 100%;
         }
 
         .btn-copy:hover {
