@@ -181,6 +181,26 @@
         .fb-fg-1 { animation: cruise-fg 20s linear infinite; animation-delay: 8s; left: 20%; }
         .fb-fg-2 { animation: cruise-fg 22s linear infinite; animation-delay: 18s; left: 60%; transform: scale(0.7); }
 
+        /* Floating Sunflowers */
+        .sunflower-bg-element {
+            position: absolute;
+            font-size: 30px;
+            opacity: 0;
+            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.3));
+            animation: drift 30s linear infinite;
+        }
+
+        @keyframes drift {
+            0% { transform: translate(-10vw, -10vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.4; }
+            100% { transform: translate(110vw, 110vh) rotate(360deg); opacity: 0; }
+        }
+
+        .sf-1 { animation-delay: 2s; animation-duration: 35s; left: 20%; font-size: 40px; }
+        .sf-2 { animation-delay: 15s; animation-duration: 40s; left: 50%; font-size: 25px; }
+        .sf-3 { animation-delay: 8s; animation-duration: 45s; left: 80%; font-size: 35px; }
+
         @keyframes cruise-fg {
             0% { transform: translate(-20vw, 120vh) rotate(30deg) scale(0.5); opacity: 0; }
             10% { opacity: 0.4; }
@@ -500,6 +520,12 @@
 <div class="butterfly-fg">
     <span class="floating-butterfly fb-fg-1">🦋</span>
     <span class="floating-butterfly fb-fg-2">🦋</span>
+</div>
+
+<div class="sunflower-bg">
+    <span class="sunflower-bg-element sf-1">🌻</span>
+    <span class="sunflower-bg-element sf-2">🌻</span>
+    <span class="sunflower-bg-element sf-3">🌻</span>
 </div>
 
 <div class="container">
